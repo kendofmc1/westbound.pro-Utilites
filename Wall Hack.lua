@@ -107,7 +107,7 @@ getgenv().AirTeam_westboundpro.WallHack = {
 	WrappedPlayers = {}
 }
 
-local Environment = getgenv().AirHub.WallHack
+local Environment = getgenv().AirTeam_westboundpro.WallHack
 
 --// Core Functions
 
