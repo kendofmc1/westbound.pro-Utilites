@@ -25,7 +25,7 @@ local Camera = workspace.CurrentCamera
 
 --// Variables
 
-local RequiredDistance, Typing, Running, ServiceConnections, Animation, OriginalSensitivity = 2000, false, false, {}
+local RequiredDistance, Typing, Running, ServiceConnections, Parts, Animation, OriginalSensitivity = 2000, false, false, {}, {"Head", "HumanoidRootPart", "LeftHand", "RightHand", "LeftLowerArm", "RightLowerArm", "LeftUpperArm", "RightUpperArm", "LeftFoot", "LeftLowerLeg", "UpperTorso", "LeftUpperLeg", "RightFoot", "RightLowerLeg", "LowerTorso", "RightUpperLeg", "Random"}
 
 --// Environment
 
@@ -68,6 +68,8 @@ local function CancelLock()
 end
 
 local function GetClosestPlayer()
+	local HitPart = ParentEnvironment.HitPart == "Random" and Parts[math.random(1, #Parts - 1)] or ParentEnvironment.HitPart
+
 	if not Environment.Locked then
 		RequiredDistance = (ParentEnvironment.FOV.Enabled and ParentEnvironment.FOV.Amount or 2000)
 
@@ -75,9 +77,9 @@ local function GetClosestPlayer()
 			if v ~= LocalPlayer and v.Character and v.Character:FindFirstChild(ParentEnvironment.HitPart) and v.Character:FindFirstChildOfClass("Humanoid") then
 				if LocalPlayer.Team == game.Teams.Cowboys and v.TeamColor == LocalPlayer.TeamColor then continue end
 				if v.Character:FindFirstChildOfClass("Humanoid").Health <= 0 then continue end
-				if Environment.Settings.WallCheck and #(Camera:GetPartsObscuringTarget({v.Character[ParentEnvironment.HitPart].Position}, v.Character:GetDescendants())) > 0 then continue end
+				if Environment.Settings.WallCheck and #(Camera:GetPartsObscuringTarget({v.Character[HitPart].Position}, v.Character:GetDescendants())) > 0 then continue end
 
-				local Vector, OnScreen = Camera:WorldToViewportPoint(v.Character[ParentEnvironment.HitPart].Position); Vector = ConvertVector(Vector)
+				local Vector, OnScreen = Camera:WorldToViewportPoint(v.Character[HitPart].Position); Vector = ConvertVector(Vector)
 				local Distance = (UserInputService:GetMouseLocation() - Vector).Magnitude
 
 				if Distance < RequiredDistance and OnScreen then
