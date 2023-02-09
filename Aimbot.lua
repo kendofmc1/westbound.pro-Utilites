@@ -41,7 +41,6 @@ getgenv().AirTeam_westboundpro.Aimbot = {
 	},
 
 	FOVSettings = {
-		Visible = true,
 		Color = Color3fromRGB(255, 255, 255),
 		LockedColor = Color3fromRGB(255, 70, 70),
 		Transparency = 0.5,
@@ -103,7 +102,7 @@ local function Load()
 			Environment.FOVCircle.NumSides = Environment.FOVSettings.Sides
 			Environment.FOVCircle.Color = Environment.FOVSettings.Color
 			Environment.FOVCircle.Transparency = Environment.FOVSettings.Transparency
-			Environment.FOVCircle.Visible = Environment.FOVSettings.Visible
+			Environment.FOVCircle.Visible = ParentEnvironment.FOV.Enabled
 			Environment.FOVCircle.Position = Vector2new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
 		else
 			Environment.FOVCircle.Visible = false
