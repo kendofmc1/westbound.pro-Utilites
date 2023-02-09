@@ -107,6 +107,8 @@ getgenv().AirTeam_westboundpro.WallHack = {
 	WrappedPlayers = {}
 }
 
+repeat task.wait(0) until getgenv().AirTeam_westboundpro.WallHack
+
 local Environment = getgenv().AirTeam_westboundpro.WallHack
 
 --// Core Functions
