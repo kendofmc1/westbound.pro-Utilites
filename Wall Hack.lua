@@ -9,7 +9,7 @@
 --// Cache
 
 local next, tostring, pcall, getgenv, setmetatable, mathfloor, mathabs, wait = next, tostring, pcall, getgenv, setmetatable, math.floor, math.abs, task.wait
-local WorldToViewportPoint, Vector2new, Vector3new, CFramenew, Drawingnew, Color3fromRGB = nil, Vector2.new, Vector3.new, CFrame.new, Drawing.new, Color3.fromRGB
+local Vector2new, Vector3new, CFramenew, Drawingnew, Color3fromRGB, WorldToViewportPoint = Vector2.new, Vector3.new, CFrame.new, Drawing.new, Color3.fromRGB
 
 --// Launching checks
 
