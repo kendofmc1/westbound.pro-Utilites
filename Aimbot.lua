@@ -97,7 +97,7 @@ local function Load()
 	OriginalSensitivity = UserInputService.MouseDeltaSensitivity
 
 	ServiceConnections.RenderSteppedConnection = RunService.RenderStepped:Connect(function()
-		if ParentEnvironment.FOV.Enabled and Environment.Settings.Enabled then
+		if ParentEnvironment.FOV.Enabled then
 			Environment.FOVCircle.Radius = ParentEnvironment.FOV.Amount
 			Environment.FOVCircle.Thickness = Environment.FOVSettings.Thickness
 			Environment.FOVCircle.Filled = Environment.FOVSettings.Filled
