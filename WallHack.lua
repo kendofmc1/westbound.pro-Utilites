@@ -187,7 +187,7 @@ local Visuals = {
 
 						local Parts, Content = {
 							Health = "("..tostring(mathfloor(Player.Character.Humanoid.Health))..")",
-							Distance = "["..tostring(mathfloor((Player.Character.HumanoidRootPart.Position - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3new(0, 0, 0))).Magnitude)).."]",
+							Distance = "["..tostring(mathfloor(((Player.Character.HumanoidRootPart.Position or Vector3new(0, 0, 0)) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3new(0, 0, 0))).Magnitude)).."]",
 							Name = Player.DisplayName == Player.Name and Player.Name or Player.DisplayName.." {"..Player.Name.."}"
 						}, ""
 
