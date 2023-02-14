@@ -7,7 +7,7 @@
 
 --// Cache
 
-local next, tostring, pcall, getgenv, setmetatable, mathfloor, mathabs, wait = next, tostring, pcall, getgenv, setmetatable, math.floor, math.abs, task.wait
+local select, next, tostring, pcall, getgenv, setmetatable, mathfloor, mathabs, stringgsub, stringmatch, wait = select, next, tostring, pcall, getgenv, setmetatable, math.floor, math.abs, string.gsub, string.match, task.wait
 local Vector2new, Vector3new, CFramenew, Drawingnew, Color3fromRGB, WorldToViewportPoint = Vector2.new, Vector3.new, CFrame.new, Drawing.new, Color3.fromRGB
 
 --// Launching checks
@@ -32,7 +32,8 @@ getgenv().AirTeam_westboundpro.WallHack = {
 	Settings = {
 		Enabled = false,
 		TeamCheck = false,
-		AliveCheck = true
+		AliveCheck = true,
+        Animals = false
 	},
 
 	Visuals = {
@@ -162,6 +163,67 @@ end
 --// Visuals
 
 local Visuals = {
+	AddESP_Animal = function(Animal)
+		local AnimalTable = {
+			Name = Animal.Name,
+			ESP = Drawingnew("Text"),
+			Connections = {}
+		}
+
+		AnimalTable.Connections.ESP = RunService.RenderStepped:Connect(function()
+			if workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and Environment.Settings.Enabled and Environment.Settings.Animals then
+				local Vector, OnScreen = WorldToViewportPoint(Animal.Head.Position)
+
+				if OnScreen then
+					AnimalTable.ESP.Visible = Environment.Settings.Animals
+
+					if AnimalTable.ESP.Visible then
+						AnimalTable.ESP.Center = true
+						AnimalTable.ESP.Size = Environment.Visuals.ESPSettings.TextSize
+						AnimalTable.ESP.Outline = Environment.Visuals.ESPSettings.Outline
+						AnimalTable.ESP.OutlineColor = Environment.Visuals.ESPSettings.OutlineColor
+						AnimalTable.ESP.Color = Environment.Visuals.ESPSettings.TextColor
+						AnimalTable.ESP.Transparency = Environment.Visuals.ESPSettings.TextTransparency
+						AnimalTable.ESP.Font = Environment.Visuals.ESPSettings.TextFont
+
+						AnimalTable.ESP.Position = Vector2new(Vector.X, Vector.Y - 25)
+
+						local Parts, Content = {
+							Health = "("..tostring(mathfloor(Animal.Humanoid.Health))..")",
+							Distance = "["..tostring(mathfloor(((Animal.HumanoidRootPart.Position or Vector3new(0, 0, 0)) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3new(0, 0, 0))).Magnitude)).."]",
+							Name = stringgsub(stringmatch(Animal.Name, "(.+){"), "(%l)(%u)", function(...)
+								return select(1, ...).." "..select(2, ...)
+							end)
+						}, ""
+
+						if Environment.Visuals.ESPSettings.DisplayName then
+							Content = Parts.Name..Content
+						end
+
+						if Environment.Visuals.ESPSettings.DisplayHealth then
+							Content = Parts.Health..(Environment.Visuals.ESPSettings.DisplayName and " " or "")..Content
+						end
+
+						if Environment.Visuals.ESPSettings.DisplayDistance then
+							Content = Content.." "..Parts.Distance
+						end
+
+						AnimalTable.ESP.Text = Content
+					end
+				else
+					AnimalTable.ESP.Visible = false
+				end
+			else
+				AnimalTable.ESP.Visible = false
+			end
+
+			if not workspace.Animals:FindFirstChild(AnimalTable.Name) then
+				AnimalTable.Connections.ESP:Disconnect()
+				AnimalTable.ESP:Remove()
+			end
+		end)
+	end,
+
 	AddESP = function(Player)
 		local PlayerTable = GetPlayerTable(Player)
 
@@ -545,8 +607,15 @@ end
 local function Load()
 	Visuals.AddCrosshair()
 
+	ServiceConnections.AnimalAddedConnection = workspace.Animals.ChildAdded:Connect(Visuals.AddESP_Animal)
 	ServiceConnections.PlayerAddedConnection = Players.PlayerAdded:Connect(Wrap)
 	ServiceConnections.PlayerRemovingConnection = Players.PlayerRemoving:Connect(UnWrap)
+
+	for _, v in next, workspace.Animals:GetChildren() do
+		if v:IsA("Model") and v:WaitForChild("Humanoid", 1 / 0) then
+			Visuals.AddESP_Animal(v)
+		end
+	end
 
 	ServiceConnections.ReWrapPlayers = RunService.RenderStepped:Connect(function()
 		for _, v in next, Players:GetPlayers() do
