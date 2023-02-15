@@ -8,7 +8,7 @@
 --// Cache
 
 local select, next, tostring, pcall, getgenv, mathfloor, mathabs, stringgsub, stringmatch, wait = select, next, tostring, pcall, getgenv, math.floor, math.abs, string.gsub, string.match, task.wait
-local Vector2new, Vector3new, CFramenew, Drawingnew, WorldToViewportPoint = Vector2.new, Vector3.new, CFrame.new, Drawing.new
+local Vector2new, Vector3new, Vector3zero, CFramenew, Drawingnew, WorldToViewportPoint = Vector2.new, Vector3.new, Vector3.zero, CFrame.new, Drawing.new
 
 --// Launching checks
 
@@ -21,10 +21,6 @@ local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
-
---// Variables
-
-local ServiceConnections = {}
 
 --// Environment
 
@@ -94,15 +90,15 @@ end
 --// Visuals
 
 local Visuals = {
-	AddESP_Animal = function(Animal)
+	AddESP_Users = function(Player)
 		local AnimalTable = {
-			Name = Animal.Name,
+			Name = Player.Name,
 			ESP = Drawingnew("Text"),
 			Connections = {}
 		}
 
 		AnimalTable.Connections.ESP = RunService.RenderStepped:Connect(function()
-			if LocalPlayer.Character and workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and GetEnv().Settings.Enabled and GetEnv().Settings.Animals then
+			if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and GetEnv().Settings.Enabled and GetEnv().Settings.Animals then
 				local Vector, OnScreen = WorldToViewportPoint(Animal.Head.Position)
 
 				if OnScreen then
@@ -121,7 +117,68 @@ local Visuals = {
 
 						local Parts, Content = {
 							Health = "("..tostring(mathfloor(Animal.Humanoid.Health))..")",
-							Distance = "["..tostring(mathfloor(((Animal.HumanoidRootPart.Position or Vector3new(0, 0, 0)) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3new(0, 0, 0))).Magnitude)).."]",
+							Distance = "["..tostring(mathfloor(((Animal.HumanoidRootPart.Position or Vector3zero) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3zero)).Magnitude)).."]",
+							Name = stringgsub(stringmatch(Animal.Name, "(.+){"), "(%l)(%u)", function(...)
+								return select(1, ...).." "..select(2, ...)
+							end)
+						}, ""
+
+						if GetEnv().Visuals.ESPSettings.DisplayName then
+							Content = Parts.Name..Content
+						end
+
+						if GetEnv().Visuals.ESPSettings.DisplayHealth then
+							Content = Parts.Health..(GetEnv().Visuals.ESPSettings.DisplayName and " " or "")..Content
+						end
+
+						if GetEnv().Visuals.ESPSettings.DisplayDistance then
+							Content = Content.." "..Parts.Distance
+						end
+
+						AnimalTable.ESP.Text = Content
+					end
+				else
+					AnimalTable.ESP.Visible = false
+				end
+			else
+				AnimalTable.ESP.Visible = false
+			end
+
+			if not workspace.Animals:FindFirstChild(AnimalTable.Name) then
+				AnimalTable.Connections.ESP:Disconnect()
+				AnimalTable.ESP:Remove()
+			end
+		end)
+	end,
+
+	AddESP_Animal = function(Animal)
+		local AnimalTable = {
+			Name = Animal.Name,
+			ESP = Drawingnew("Text"),
+			Connections = {}
+		}
+
+		AnimalTable.Connections.ESP = RunService.RenderStepped:Connect(function()
+			if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and GetEnv().Settings.Enabled and GetEnv().Settings.Animals then
+				local Vector, OnScreen = WorldToViewportPoint(Animal.Head.Position)
+
+				if OnScreen then
+					AnimalTable.ESP.Visible = GetEnv().Settings.Animals
+
+					if AnimalTable.ESP.Visible then
+						AnimalTable.ESP.Center = true
+						AnimalTable.ESP.Size = GetEnv().Visuals.ESPSettings.TextSize
+						AnimalTable.ESP.Outline = GetEnv().Visuals.ESPSettings.Outline
+						AnimalTable.ESP.OutlineColor = GetEnv().Visuals.ESPSettings.OutlineColor
+						AnimalTable.ESP.Color = GetEnv().Visuals.ESPSettings.TextColor
+						AnimalTable.ESP.Transparency = GetEnv().Visuals.ESPSettings.TextTransparency
+						AnimalTable.ESP.Font = GetEnv().Visuals.ESPSettings.TextFont
+
+						AnimalTable.ESP.Position = Vector2new(Vector.X, Vector.Y - 25)
+
+						local Parts, Content = {
+							Health = "("..tostring(mathfloor(Animal.Humanoid.Health))..")",
+							Distance = "["..tostring(mathfloor(((Animal.HumanoidRootPart.Position or Vector3zero) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3zero)).Magnitude)).."]",
 							Name = stringgsub(stringmatch(Animal.Name, "(.+){"), "(%l)(%u)", function(...)
 								return select(1, ...).." "..select(2, ...)
 							end)
@@ -183,7 +240,7 @@ local Visuals = {
 
 						local Parts, Content = {
 							Health = "("..tostring(mathfloor(Player.Character.Humanoid.Health))..")",
-							Distance = "["..tostring(mathfloor(((Player.Character.HumanoidRootPart.Position or Vector3new(0, 0, 0)) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3new(0, 0, 0))).Magnitude)).."]",
+							Distance = "["..tostring(mathfloor(((Player.Character.HumanoidRootPart.Position or Vector3zero) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3zero)).Magnitude)).."]",
 							Name = Player.DisplayName == Player.Name and Player.Name or Player.DisplayName.." {"..Player.Name.."}"
 						}, ""
 
@@ -397,7 +454,7 @@ local Visuals = {
 	AddCrosshair = function()
 		local AxisX, AxisY = Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2
 
-		ServiceConnections.AxisConnection = RunService.RenderStepped:Connect(function()
+		RunService.RenderStepped:Connect(function()
 			if GetEnv().Crosshair.Settings.Enabled then
 				if GetEnv().Crosshair.Settings.Type == 1 then
 					AxisX, AxisY = UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y
@@ -409,7 +466,7 @@ local Visuals = {
 			end
 		end)
 
-		ServiceConnections.CrosshairConnection = RunService.RenderStepped:Connect(function()
+		RunService.RenderStepped:Connect(function()
 			if GetEnv().Crosshair.Settings.Enabled then
 
 				--// Left Line
@@ -539,9 +596,9 @@ end
 local function Load()
 	Visuals.AddCrosshair()
 
-	ServiceConnections.AnimalAddedConnection = workspace.Animals.ChildAdded:Connect(Visuals.AddESP_Animal)
-	ServiceConnections.PlayerAddedConnection = Players.PlayerAdded:Connect(Wrap)
-	ServiceConnections.PlayerRemovingConnection = Players.PlayerRemoving:Connect(UnWrap)
+	workspace.Animals.ChildAdded:Connect(Visuals.AddESP_Animal)
+	Players.PlayerAdded:Connect(Wrap)
+	Players.PlayerRemoving:Connect(UnWrap)
 
 	for _, v in next, workspace.Animals:GetChildren() do
 		if v:IsA("Model") and v:WaitForChild("Humanoid", 1 / 0) then
@@ -549,7 +606,7 @@ local function Load()
 		end
 	end
 
-	ServiceConnections.ReWrapPlayers = RunService.RenderStepped:Connect(function()
+	RunService.RenderStepped:Connect(function()
 		for _, v in next, Players:GetPlayers() do
 			if v ~= LocalPlayer then
 				Wrap(v)
