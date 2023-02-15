@@ -7,12 +7,12 @@
 
 --// Cache
 
-local select, next, tostring, pcall, getgenv, setmetatable, mathfloor, mathabs, stringgsub, stringmatch, wait = select, next, tostring, pcall, getgenv, setmetatable, math.floor, math.abs, string.gsub, string.match, task.wait
-local Vector2new, Vector3new, CFramenew, Drawingnew, Color3fromRGB, WorldToViewportPoint = Vector2.new, Vector3.new, CFrame.new, Drawing.new, Color3.fromRGB
+local select, next, tostring, pcall, getgenv, mathfloor, mathabs, stringgsub, stringmatch, wait = select, next, tostring, pcall, getgenv, math.floor, math.abs, string.gsub, string.match, task.wait
+local Vector2new, Vector3new, CFramenew, Drawingnew, WorldToViewportPoint = Vector2.new, Vector3.new, CFrame.new, Drawing.new
 
 --// Launching checks
 
-if not getgenv().AirTeam_westboundpro or getgenv().AirTeam_westboundpro.WallHack then return end
+if not getgenv().AirTeam_westboundpro or not getgenv().AirTeam_westboundpro.WallHack then return end
 
 --// Services
 
@@ -28,86 +28,13 @@ local ServiceConnections = {}
 
 --// Environment
 
-getgenv().AirTeam_westboundpro.WallHack = {
-	Settings = {
-		Enabled = false,
-		TeamCheck = false,
-		AliveCheck = true,
-		Animals = false
-	},
-
-	Visuals = {
-		ESPSettings = {
-			Enabled = true,
-			TextColor = Color3fromRGB(255, 255, 255),
-			TextSize = 14,
-			Outline = true,
-			OutlineColor = Color3fromRGB(0, 0, 0),
-			TextTransparency = 0.7,
-			TextFont = Drawing.Fonts.UI, -- UI, System, Plex, Monospace
-			DisplayDistance = true,
-			DisplayHealth = true,
-			DisplayName = true
-		},
-
-		TracersSettings = {
-			Enabled = true,
-			Type = 1, -- 1 - Bottom; 2 - Center; 3 - Mouse
-			Transparency = 0.7,
-			Thickness = 1,
-			Color = Color3fromRGB(255, 255, 255)
-		},
-
-		BoxSettings = {
-			Enabled = true,
-			Type = 1; -- 1 - 3D; 2 - 2D;
-			Color = Color3fromRGB(255, 255, 255),
-			Transparency = 0.7,
-			Thickness = 1,
-			Filled = false, -- For 2D
-			Increase = 1
-		},
-
-		HeadDotSettings = {
-			Enabled = true,
-			Color = Color3fromRGB(255, 255, 255),
-			Transparency = 0.5,
-			Thickness = 1,
-			Filled = true,
-			Sides = 30
-		}
-	},
-
-	Crosshair = {
-		Settings = {
-			Enabled = false,
-			Type = 1, -- 1 - Mouse; 2 - Center
-			Size = 12,
-			Thickness = 1,
-			Color = Color3fromRGB(0, 255, 0),
-			Transparency = 1,
-			GapSize = 5,
-			CenterDot = false,
-			CenterDotColor = Color3fromRGB(0, 255, 0),
-			CenterDotSize = 1,
-			CenterDotTransparency = 1,
-			CenterDotFilled = true,
-			CenterDotThickness = 1
-		},
-
-		Parts = {
-			LeftLine = Drawingnew("Line"),
-			RightLine = Drawingnew("Line"),
-			TopLine = Drawingnew("Line"),
-			BottomLine = Drawingnew("Line"),
-			CenterDot = Drawingnew("Circle")
-		}
-	},
-
-	WrappedPlayers = {}
-}
-
-local Environment = getgenv().AirTeam_westboundpro.WallHack
+local CrosshairParts, WrappedPlayers = {
+	LeftLine = Drawingnew("Line"),
+	RightLine = Drawingnew("Line"),
+	TopLine = Drawingnew("Line"),
+	BottomLine = Drawingnew("Line"),
+	CenterDot = Drawingnew("Circle")
+}, {}
 
 --// Core Functions
 
@@ -115,8 +42,12 @@ WorldToViewportPoint = function(...)
 	return Camera.WorldToViewportPoint(Camera, ...)
 end
 
+local function GetEnv()
+	return getgenv().AirTeam_westboundpro.WallHack
+end
+
 local function GetPlayerTable(Player)
-	for _, v in next, Environment.WrappedPlayers do
+	for _, v in next, WrappedPlayers do
 		if v.Name == Player.Name then
 			return v
 		end
@@ -142,13 +73,13 @@ local function InitChecks(Player)
 
 	PlayerTable.Connections.UpdateChecks = RunService.RenderStepped:Connect(function()
 		if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") then
-			if Environment.Settings.AliveCheck then
+			if GetEnv().Settings.AliveCheck then
 				PlayerTable.Checks.Alive = Player.Character:FindFirstChildOfClass("Humanoid").Health > 0
 			else
 				PlayerTable.Checks.Alive = true
 			end
 
-			if Environment.Settings.TeamCheck then
+			if GetEnv().Settings.TeamCheck then
 				PlayerTable.Checks.Team = Player.TeamColor ~= LocalPlayer.TeamColor
 			else
 				PlayerTable.Checks.Team = true
@@ -171,20 +102,20 @@ local Visuals = {
 		}
 
 		AnimalTable.Connections.ESP = RunService.RenderStepped:Connect(function()
-			if workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and Environment.Settings.Enabled and Environment.Settings.Animals then
+			if LocalPlayer.Character and workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and GetEnv().Settings.Enabled and GetEnv().Settings.Animals then
 				local Vector, OnScreen = WorldToViewportPoint(Animal.Head.Position)
 
 				if OnScreen then
-					AnimalTable.ESP.Visible = Environment.Settings.Animals
+					AnimalTable.ESP.Visible = GetEnv().Settings.Animals
 
 					if AnimalTable.ESP.Visible then
 						AnimalTable.ESP.Center = true
-						AnimalTable.ESP.Size = Environment.Visuals.ESPSettings.TextSize
-						AnimalTable.ESP.Outline = Environment.Visuals.ESPSettings.Outline
-						AnimalTable.ESP.OutlineColor = Environment.Visuals.ESPSettings.OutlineColor
-						AnimalTable.ESP.Color = Environment.Visuals.ESPSettings.TextColor
-						AnimalTable.ESP.Transparency = Environment.Visuals.ESPSettings.TextTransparency
-						AnimalTable.ESP.Font = Environment.Visuals.ESPSettings.TextFont
+						AnimalTable.ESP.Size = GetEnv().Visuals.ESPSettings.TextSize
+						AnimalTable.ESP.Outline = GetEnv().Visuals.ESPSettings.Outline
+						AnimalTable.ESP.OutlineColor = GetEnv().Visuals.ESPSettings.OutlineColor
+						AnimalTable.ESP.Color = GetEnv().Visuals.ESPSettings.TextColor
+						AnimalTable.ESP.Transparency = GetEnv().Visuals.ESPSettings.TextTransparency
+						AnimalTable.ESP.Font = GetEnv().Visuals.ESPSettings.TextFont
 
 						AnimalTable.ESP.Position = Vector2new(Vector.X, Vector.Y - 25)
 
@@ -196,15 +127,15 @@ local Visuals = {
 							end)
 						}, ""
 
-						if Environment.Visuals.ESPSettings.DisplayName then
+						if GetEnv().Visuals.ESPSettings.DisplayName then
 							Content = Parts.Name..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayHealth then
-							Content = Parts.Health..(Environment.Visuals.ESPSettings.DisplayName and " " or "")..Content
+						if GetEnv().Visuals.ESPSettings.DisplayHealth then
+							Content = Parts.Health..(GetEnv().Visuals.ESPSettings.DisplayName and " " or "")..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayDistance then
+						if GetEnv().Visuals.ESPSettings.DisplayDistance then
 							Content = Content.." "..Parts.Distance
 						end
 
@@ -230,22 +161,23 @@ local Visuals = {
 		PlayerTable.ESP = Drawingnew("Text")
 
 		PlayerTable.Connections.ESP = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and Environment.Settings.Enabled then
+			if LocalPlayer.Character and Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and GetEnv().Settings.Enabled then
 				local Vector, OnScreen = WorldToViewportPoint(Player.Character.Head.Position)
 
-				PlayerTable.ESP.Visible = Environment.Visuals.ESPSettings.Enabled
+				PlayerTable.ESP.Visible = GetEnv().Visuals.ESPSettings.Enabled
 
-				if OnScreen and Environment.Visuals.ESPSettings.Enabled then
+				if OnScreen and GetEnv().Visuals.ESPSettings.Enabled then
 					PlayerTable.ESP.Visible = PlayerTable.Checks.Alive and PlayerTable.Checks.Team and true or false
 
 					if PlayerTable.ESP.Visible then
 						PlayerTable.ESP.Center = true
-						PlayerTable.ESP.Size = Environment.Visuals.ESPSettings.TextSize
-						PlayerTable.ESP.Outline = Environment.Visuals.ESPSettings.Outline
-						PlayerTable.ESP.OutlineColor = Environment.Visuals.ESPSettings.OutlineColor
-						PlayerTable.ESP.Color = Environment.Visuals.ESPSettings.TextColor
-						PlayerTable.ESP.Transparency = Environment.Visuals.ESPSettings.TextTransparency
-						PlayerTable.ESP.Font = Environment.Visuals.ESPSettings.TextFont
+						PlayerTable.ESP.Size = GetEnv().Visuals.ESPSettings.TextSize
+						PlayerTable.ESP.Outline = GetEnv().Visuals.ESPSettings.Outline
+						warn(typeof(GetEnv().Visuals.ESPSettings.OutlineColor), GetEnv().Visuals.ESPSettings.OutlineColor)
+						PlayerTable.ESP.OutlineColor = GetEnv().Visuals.ESPSettings.OutlineColor
+						PlayerTable.ESP.Color = GetEnv().Visuals.ESPSettings.TextColor
+						PlayerTable.ESP.Transparency = GetEnv().Visuals.ESPSettings.TextTransparency
+						PlayerTable.ESP.Font = GetEnv().Visuals.ESPSettings.TextFont
 
 						PlayerTable.ESP.Position = Vector2new(Vector.X, Vector.Y - 25)
 
@@ -255,15 +187,15 @@ local Visuals = {
 							Name = Player.DisplayName == Player.Name and Player.Name or Player.DisplayName.." {"..Player.Name.."}"
 						}, ""
 
-						if Environment.Visuals.ESPSettings.DisplayName then
+						if GetEnv().Visuals.ESPSettings.DisplayName then
 							Content = Parts.Name..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayHealth then
-							Content = Parts.Health..(Environment.Visuals.ESPSettings.DisplayName and " " or "")..Content
+						if GetEnv().Visuals.ESPSettings.DisplayHealth then
+							Content = Parts.Health..(GetEnv().Visuals.ESPSettings.DisplayName and " " or "")..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayDistance then
+						if GetEnv().Visuals.ESPSettings.DisplayDistance then
 							Content = Content.." "..Parts.Distance
 						end
 
@@ -284,26 +216,26 @@ local Visuals = {
 		PlayerTable.Tracer = Drawingnew("Line")
 
 		PlayerTable.Connections.Tracer = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Environment.Settings.Enabled then
+			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and GetEnv().Settings.Enabled then
 				local HRPCFrame, HRPSize = Player.Character.HumanoidRootPart.CFrame, Player.Character.HumanoidRootPart.Size
 				local Vector, OnScreen = WorldToViewportPoint(HRPCFrame * CFramenew(0, -HRPSize.Y, 0).Position)
 
-				if OnScreen and Environment.Visuals.TracersSettings.Enabled then
-					if Environment.Visuals.TracersSettings.Enabled then
+				if OnScreen and GetEnv().Visuals.TracersSettings.Enabled then
+					if GetEnv().Visuals.TracersSettings.Enabled then
 						PlayerTable.Tracer.Visible = PlayerTable.Checks.Alive and PlayerTable.Checks.Team and true or false
 
 						if PlayerTable.Tracer.Visible then
-							PlayerTable.Tracer.Thickness = Environment.Visuals.TracersSettings.Thickness
-							PlayerTable.Tracer.Color = Environment.Visuals.TracersSettings.Color
-							PlayerTable.Tracer.Transparency = Environment.Visuals.TracersSettings.Transparency
+							PlayerTable.Tracer.Thickness = GetEnv().Visuals.TracersSettings.Thickness
+							PlayerTable.Tracer.Color = GetEnv().Visuals.TracersSettings.Color
+							PlayerTable.Tracer.Transparency = GetEnv().Visuals.TracersSettings.Transparency
 
 							PlayerTable.Tracer.To = Vector2new(Vector.X, Vector.Y)
 
-							if Environment.Visuals.TracersSettings.Type == 1 then
+							if GetEnv().Visuals.TracersSettings.Type == 1 then
 								PlayerTable.Tracer.From = Vector2new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-							elseif Environment.Visuals.TracersSettings.Type == 2 then
+							elseif GetEnv().Visuals.TracersSettings.Type == 2 then
 								PlayerTable.Tracer.From = Vector2new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-							elseif Environment.Visuals.TracersSettings.Type == 3 then
+							elseif GetEnv().Visuals.TracersSettings.Type == 3 then
 								PlayerTable.Tracer.From = Vector2new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
 							else
 								PlayerTable.Tracer.From = Vector2new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
@@ -331,14 +263,14 @@ local Visuals = {
 		PlayerTable.Box.BottomRightLine = Drawingnew("Line")
 
 		local function Visibility(Bool)
-			if Environment.Visuals.BoxSettings.Type == 1 then
+			if GetEnv().Visuals.BoxSettings.Type == 1 then
 				PlayerTable.Box.Square.Visible = not Bool
 
 				PlayerTable.Box.TopLeftLine.Visible = Bool
 				PlayerTable.Box.TopRightLine.Visible = Bool
 				PlayerTable.Box.BottomLeftLine.Visible = Bool
 				PlayerTable.Box.BottomRightLine.Visible = Bool
-			elseif Environment.Visuals.BoxSettings.Type == 2 then
+			elseif GetEnv().Visuals.BoxSettings.Type == 2 then
 				PlayerTable.Box.Square.Visible = Bool
 
 				PlayerTable.Box.TopLeftLine.Visible = not Bool
@@ -358,10 +290,10 @@ local Visuals = {
 		end
 
 		PlayerTable.Connections.Box = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and Environment.Settings.Enabled then
+			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and GetEnv().Settings.Enabled then
 				local Vector, OnScreen = WorldToViewportPoint(Player.Character.HumanoidRootPart.Position)
 
-				local HRPCFrame, HRPSize = Player.Character.HumanoidRootPart.CFrame, Player.Character.HumanoidRootPart.Size * Environment.Visuals.BoxSettings.Increase
+				local HRPCFrame, HRPSize = Player.Character.HumanoidRootPart.CFrame, Player.Character.HumanoidRootPart.Size * GetEnv().Visuals.BoxSettings.Increase
 
 				local TopLeftPosition = WorldToViewportPoint(HRPCFrame * CFramenew(HRPSize.X,  HRPSize.Y, 0).Position)
 				local TopRightPosition = WorldToViewportPoint(HRPCFrame * CFramenew(-HRPSize.X,  HRPSize.Y, 0).Position)
@@ -371,9 +303,9 @@ local Visuals = {
 				local HeadOffset = WorldToViewportPoint(Player.Character.Head.Position + Vector3new(0, 0.5, 0))
 				local LegsOffset = WorldToViewportPoint(Player.Character.HumanoidRootPart.Position - Vector3new(0, 3, 0))
 
-				Visibility(Environment.Visuals.BoxSettings.Enabled)
+				Visibility(GetEnv().Visuals.BoxSettings.Enabled)
 
-				if OnScreen and Environment.Visuals.BoxSettings.Enabled then
+				if OnScreen and GetEnv().Visuals.BoxSettings.Enabled then
 					if PlayerTable.Checks.Alive and PlayerTable.Checks.Team then
 						Visibility(true)
 					else
@@ -381,29 +313,29 @@ local Visuals = {
 					end
 
 					if PlayerTable.Box.Square.Visible and not PlayerTable.Box.TopLeftLine.Visible and not PlayerTable.Box.TopRightLine.Visible and not PlayerTable.Box.BottomLeftLine.Visible and not PlayerTable.Box.BottomRightLine.Visible then
-						PlayerTable.Box.Square.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.Square.Color = Environment.Visuals.BoxSettings.Color
-						PlayerTable.Box.Square.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.Square.Filled = Environment.Visuals.BoxSettings.Filled
+						PlayerTable.Box.Square.Thickness = GetEnv().Visuals.BoxSettings.Thickness
+						PlayerTable.Box.Square.Color = GetEnv().Visuals.BoxSettings.Color
+						PlayerTable.Box.Square.Transparency = GetEnv().Visuals.BoxSettings.Transparency
+						PlayerTable.Box.Square.Filled = GetEnv().Visuals.BoxSettings.Filled
 
 						PlayerTable.Box.Square.Size = Vector2new(2000 / Vector.Z, HeadOffset.Y - LegsOffset.Y)
 						PlayerTable.Box.Square.Position = Vector2new(Vector.X - PlayerTable.Box.Square.Size.X / 2, Vector.Y - PlayerTable.Box.Square.Size.Y / 2)
 					elseif not PlayerTable.Box.Square.Visible and PlayerTable.Box.TopLeftLine.Visible and PlayerTable.Box.TopRightLine.Visible and PlayerTable.Box.BottomLeftLine.Visible and PlayerTable.Box.BottomRightLine.Visible then
-						PlayerTable.Box.TopLeftLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.TopLeftLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.TopLeftLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.TopLeftLine.Thickness = GetEnv().Visuals.BoxSettings.Thickness
+						PlayerTable.Box.TopLeftLine.Transparency = GetEnv().Visuals.BoxSettings.Transparency
+						PlayerTable.Box.TopLeftLine.Color = GetEnv().Visuals.BoxSettings.Color
 
-						PlayerTable.Box.TopRightLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.TopRightLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.TopRightLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.TopRightLine.Thickness = GetEnv().Visuals.BoxSettings.Thickness
+						PlayerTable.Box.TopRightLine.Transparency = GetEnv().Visuals.BoxSettings.Transparency
+						PlayerTable.Box.TopRightLine.Color = GetEnv().Visuals.BoxSettings.Color
 
-						PlayerTable.Box.BottomLeftLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.BottomLeftLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.BottomLeftLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.BottomLeftLine.Thickness = GetEnv().Visuals.BoxSettings.Thickness
+						PlayerTable.Box.BottomLeftLine.Transparency = GetEnv().Visuals.BoxSettings.Transparency
+						PlayerTable.Box.BottomLeftLine.Color = GetEnv().Visuals.BoxSettings.Color
 
-						PlayerTable.Box.BottomRightLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.BottomRightLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.BottomRightLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.BottomRightLine.Thickness = GetEnv().Visuals.BoxSettings.Thickness
+						PlayerTable.Box.BottomRightLine.Transparency = GetEnv().Visuals.BoxSettings.Transparency
+						PlayerTable.Box.BottomRightLine.Color = GetEnv().Visuals.BoxSettings.Color
 
 						PlayerTable.Box.TopLeftLine.From = Vector2new(TopLeftPosition.X, TopLeftPosition.Y)
 						PlayerTable.Box.TopLeftLine.To = Vector2new(TopRightPosition.X, TopRightPosition.Y)
@@ -432,21 +364,21 @@ local Visuals = {
 		PlayerTable.HeadDot = Drawingnew("Circle")
 
 		PlayerTable.Connections.HeadDot = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("Head") and Environment.Settings.Enabled then
+			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("Head") and GetEnv().Settings.Enabled then
 				local Vector, OnScreen = WorldToViewportPoint(Player.Character.Head.Position)
 
-				PlayerTable.HeadDot.Visible = Environment.Visuals.HeadDotSettings.Enabled
+				PlayerTable.HeadDot.Visible = GetEnv().Visuals.HeadDotSettings.Enabled
 
-				if OnScreen and Environment.Visuals.HeadDotSettings.Enabled then
-					if Environment.Visuals.HeadDotSettings.Enabled then
+				if OnScreen and GetEnv().Visuals.HeadDotSettings.Enabled then
+					if GetEnv().Visuals.HeadDotSettings.Enabled then
 						PlayerTable.HeadDot.Visible = PlayerTable.Checks.Alive and PlayerTable.Checks.Team and true or false
 
 						if PlayerTable.HeadDot.Visible then
-							PlayerTable.HeadDot.Thickness = Environment.Visuals.HeadDotSettings.Thickness
-							PlayerTable.HeadDot.Color = Environment.Visuals.HeadDotSettings.Color
-							PlayerTable.HeadDot.Transparency = Environment.Visuals.HeadDotSettings.Transparency
-							PlayerTable.HeadDot.NumSides = Environment.Visuals.HeadDotSettings.Sides
-							PlayerTable.HeadDot.Filled = Environment.Visuals.HeadDotSettings.Filled
+							PlayerTable.HeadDot.Thickness = GetEnv().Visuals.HeadDotSettings.Thickness
+							PlayerTable.HeadDot.Color = GetEnv().Visuals.HeadDotSettings.Color
+							PlayerTable.HeadDot.Transparency = GetEnv().Visuals.HeadDotSettings.Transparency
+							PlayerTable.HeadDot.NumSides = GetEnv().Visuals.HeadDotSettings.Sides
+							PlayerTable.HeadDot.Filled = GetEnv().Visuals.HeadDotSettings.Filled
 							PlayerTable.HeadDot.Position = Vector2new(Vector.X, Vector.Y)
 
 							local Top, Bottom = WorldToViewportPoint((Player.Character.Head.CFrame * CFramenew(0, Player.Character.Head.Size.Y / 2, 0)).Position), WorldToViewportPoint((Player.Character.Head.CFrame * CFramenew(0, -Player.Character.Head.Size.Y / 2, 0)).Position)
@@ -466,76 +398,76 @@ local Visuals = {
 		local AxisX, AxisY = Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2
 
 		ServiceConnections.AxisConnection = RunService.RenderStepped:Connect(function()
-			if Environment.Crosshair.Settings.Enabled then
-				if Environment.Crosshair.Settings.Type == 1 then
+			if GetEnv().Crosshair.Settings.Enabled then
+				if GetEnv().Crosshair.Settings.Type == 1 then
 					AxisX, AxisY = UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y
-				elseif Environment.Crosshair.Settings.Type == 2 then
+				elseif GetEnv().Crosshair.Settings.Type == 2 then
 					AxisX, AxisY = Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2
 				else
-					Environment.Crosshair.Settings.Type = 1
+					GetEnv().Crosshair.Settings.Type = 1
 				end
 			end
 		end)
 
 		ServiceConnections.CrosshairConnection = RunService.RenderStepped:Connect(function()
-			if Environment.Crosshair.Settings.Enabled then
+			if GetEnv().Crosshair.Settings.Enabled then
 
 				--// Left Line
 
-				Environment.Crosshair.Parts.LeftLine.Visible = Environment.Crosshair.Settings.Enabled and Environment.Settings.Enabled
-				Environment.Crosshair.Parts.LeftLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.LeftLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.LeftLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.LeftLine.Visible = GetEnv().Crosshair.Settings.Enabled and GetEnv().Settings.Enabled
+				CrosshairParts.LeftLine.Color = GetEnv().Crosshair.Settings.Color
+				CrosshairParts.LeftLine.Thickness = GetEnv().Crosshair.Settings.Thickness
+				CrosshairParts.LeftLine.Transparency = GetEnv().Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.LeftLine.From = Vector2new(AxisX + Environment.Crosshair.Settings.GapSize, AxisY)
-				Environment.Crosshair.Parts.LeftLine.To = Vector2new(AxisX + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.LeftLine.From = Vector2new(AxisX + GetEnv().Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.LeftLine.To = Vector2new(AxisX + GetEnv().Crosshair.Settings.Size + GetEnv().Crosshair.Settings.GapSize, AxisY)
 
 				--// Right Line
 
-				Environment.Crosshair.Parts.RightLine.Visible = Environment.Settings.Enabled
-				Environment.Crosshair.Parts.RightLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.RightLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.RightLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.RightLine.Visible = GetEnv().Settings.Enabled
+				CrosshairParts.RightLine.Color = GetEnv().Crosshair.Settings.Color
+				CrosshairParts.RightLine.Thickness = GetEnv().Crosshair.Settings.Thickness
+				CrosshairParts.RightLine.Transparency = GetEnv().Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.RightLine.From = Vector2new(AxisX - Environment.Crosshair.Settings.GapSize, AxisY)
-				Environment.Crosshair.Parts.RightLine.To = Vector2new(AxisX - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.RightLine.From = Vector2new(AxisX - GetEnv().Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.RightLine.To = Vector2new(AxisX - GetEnv().Crosshair.Settings.Size - GetEnv().Crosshair.Settings.GapSize, AxisY)
 
 				--// Top Line
 
-				Environment.Crosshair.Parts.TopLine.Visible = Environment.Settings.Enabled
-				Environment.Crosshair.Parts.TopLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.TopLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.TopLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.TopLine.Visible = GetEnv().Settings.Enabled
+				CrosshairParts.TopLine.Color = GetEnv().Crosshair.Settings.Color
+				CrosshairParts.TopLine.Thickness = GetEnv().Crosshair.Settings.Thickness
+				CrosshairParts.TopLine.Transparency = GetEnv().Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.TopLine.From = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.GapSize)
-				Environment.Crosshair.Parts.TopLine.To = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.TopLine.From = Vector2new(AxisX, AxisY + GetEnv().Crosshair.Settings.GapSize)
+				CrosshairParts.TopLine.To = Vector2new(AxisX, AxisY + GetEnv().Crosshair.Settings.Size + GetEnv().Crosshair.Settings.GapSize)
 
 				--// Bottom Line
 
-				Environment.Crosshair.Parts.BottomLine.Visible = Environment.Settings.Enabled
-				Environment.Crosshair.Parts.BottomLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.BottomLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.BottomLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.BottomLine.Visible = GetEnv().Settings.Enabled
+				CrosshairParts.BottomLine.Color = GetEnv().Crosshair.Settings.Color
+				CrosshairParts.BottomLine.Thickness = GetEnv().Crosshair.Settings.Thickness
+				CrosshairParts.BottomLine.Transparency = GetEnv().Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.BottomLine.From = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.GapSize)
-				Environment.Crosshair.Parts.BottomLine.To = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.BottomLine.From = Vector2new(AxisX, AxisY - GetEnv().Crosshair.Settings.GapSize)
+				CrosshairParts.BottomLine.To = Vector2new(AxisX, AxisY - GetEnv().Crosshair.Settings.Size - GetEnv().Crosshair.Settings.GapSize)
 
 				--// Center Dot
 
-				Environment.Crosshair.Parts.CenterDot.Visible = Environment.Settings.Enabled and Environment.Crosshair.Settings.CenterDot
-				Environment.Crosshair.Parts.CenterDot.Color = Environment.Crosshair.Settings.CenterDotColor
-				Environment.Crosshair.Parts.CenterDot.Radius = Environment.Crosshair.Settings.CenterDotSize
-				Environment.Crosshair.Parts.CenterDot.Transparency = Environment.Crosshair.Settings.CenterDotTransparency
-				Environment.Crosshair.Parts.CenterDot.Filled = Environment.Crosshair.Settings.CenterDotFilled
-				Environment.Crosshair.Parts.CenterDot.Thickness = Environment.Crosshair.Settings.CenterDotThickness
+				CrosshairParts.CenterDot.Visible = GetEnv().Settings.Enabled and GetEnv().Crosshair.Settings.CenterDot
+				CrosshairParts.CenterDot.Color = GetEnv().Crosshair.Settings.CenterDotColor
+				CrosshairParts.CenterDot.Radius = GetEnv().Crosshair.Settings.CenterDotSize
+				CrosshairParts.CenterDot.Transparency = GetEnv().Crosshair.Settings.CenterDotTransparency
+				CrosshairParts.CenterDot.Filled = GetEnv().Crosshair.Settings.CenterDotFilled
+				CrosshairParts.CenterDot.Thickness = GetEnv().Crosshair.Settings.CenterDotThickness
 
-				Environment.Crosshair.Parts.CenterDot.Position = Vector2new(AxisX, AxisY)
+				CrosshairParts.CenterDot.Position = Vector2new(AxisX, AxisY)
 			else
-				Environment.Crosshair.Parts.LeftLine.Visible = false
-				Environment.Crosshair.Parts.RightLine.Visible = false
-				Environment.Crosshair.Parts.TopLine.Visible = false
-				Environment.Crosshair.Parts.BottomLine.Visible = false
-				Environment.Crosshair.Parts.CenterDot.Visible = false
+				CrosshairParts.LeftLine.Visible = false
+				CrosshairParts.RightLine.Visible = false
+				CrosshairParts.TopLine.Visible = false
+				CrosshairParts.BottomLine.Visible = false
+				CrosshairParts.CenterDot.Visible = false
 			end
 		end)
 	end
@@ -547,14 +479,14 @@ local function Wrap(Player)
 	if not GetPlayerTable(Player) then
 		local Table, Value = nil, {Name = Player.Name, RigType = nil, Checks = {Alive = true, Team = true}, Connections = {}, ESP = nil, Tracer = nil, HeadDot = nil, Box = {Square = nil, TopLeftLine = nil, TopRightLine = nil, BottomLeftLine = nil, BottomRightLine = nil}, Chams = {}}
 
-		for _, v in next, Environment.WrappedPlayers do
+		for _, v in next, WrappedPlayers do
 			if v[1] == Player.Name then
 				Table = v
 			end
 		end
 
 		if not Table then
-			Environment.WrappedPlayers[#Environment.WrappedPlayers + 1] = Value
+			WrappedPlayers[#WrappedPlayers + 1] = Value
 			AssignRigType(Player)
 			InitChecks(Player)
 
@@ -569,7 +501,7 @@ end
 local function UnWrap(Player)
 	local Table, Index = nil, nil
 
-	for i, v in next, Environment.WrappedPlayers do
+	for i, v in next, WrappedPlayers do
 		if v.Name == Player.Name then
 			Table, Index = v, i
 		end
@@ -600,7 +532,7 @@ local function UnWrap(Player)
 			end
 		end
 
-		Environment.WrappedPlayers[Index] = nil
+		WrappedPlayers[Index] = nil
 	end
 end
 
