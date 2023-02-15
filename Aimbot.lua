@@ -33,11 +33,11 @@ local FOVCircle = Drawing.new("Circle")
 --// Core Functions
 
 local function GetEnv()
-    return getgenv().AirTeam_westboundpro.Aimbot
+	return getgenv().AirTeam_westboundpro.Aimbot
 end
 
 local function GetParentEnv()
-    return getgenv().AirTeam_westboundpro.Settings
+	return getgenv().AirTeam_westboundpro.Settings
 end
 
 local function ConvertVector(Vector)
