@@ -90,67 +90,6 @@ end
 --// Visuals
 
 local Visuals = {
-	AddESP_Users = function(Player)
-		local AnimalTable = {
-			Name = Player.Name,
-			ESP = Drawingnew("Text"),
-			Connections = {}
-		}
-
-		AnimalTable.Connections.ESP = RunService.RenderStepped:Connect(function()
-			if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and GetEnv().Settings.Enabled and GetEnv().Settings.Animals then
-				local Vector, OnScreen = WorldToViewportPoint(Animal.Head.Position)
-
-				if OnScreen then
-					AnimalTable.ESP.Visible = GetEnv().Settings.Animals
-
-					if AnimalTable.ESP.Visible then
-						AnimalTable.ESP.Center = true
-						AnimalTable.ESP.Size = GetEnv().Visuals.ESPSettings.TextSize
-						AnimalTable.ESP.Outline = GetEnv().Visuals.ESPSettings.Outline
-						AnimalTable.ESP.OutlineColor = GetEnv().Visuals.ESPSettings.OutlineColor
-						AnimalTable.ESP.Color = GetEnv().Visuals.ESPSettings.TextColor
-						AnimalTable.ESP.Transparency = GetEnv().Visuals.ESPSettings.TextTransparency
-						AnimalTable.ESP.Font = GetEnv().Visuals.ESPSettings.TextFont
-
-						AnimalTable.ESP.Position = Vector2new(Vector.X, Vector.Y - 25)
-
-						local Parts, Content = {
-							Health = "("..tostring(mathfloor(Animal.Humanoid.Health))..")",
-							Distance = "["..tostring(mathfloor(((Animal.HumanoidRootPart.Position or Vector3zero) - (LocalPlayer.Character.HumanoidRootPart.Position or Vector3zero)).Magnitude)).."]",
-							Name = stringgsub(stringmatch(Animal.Name, "(.+){"), "(%l)(%u)", function(...)
-								return select(1, ...).." "..select(2, ...)
-							end)
-						}, ""
-
-						if GetEnv().Visuals.ESPSettings.DisplayName then
-							Content = Parts.Name..Content
-						end
-
-						if GetEnv().Visuals.ESPSettings.DisplayHealth then
-							Content = Parts.Health..(GetEnv().Visuals.ESPSettings.DisplayName and " " or "")..Content
-						end
-
-						if GetEnv().Visuals.ESPSettings.DisplayDistance then
-							Content = Content.." "..Parts.Distance
-						end
-
-						AnimalTable.ESP.Text = Content
-					end
-				else
-					AnimalTable.ESP.Visible = false
-				end
-			else
-				AnimalTable.ESP.Visible = false
-			end
-
-			if not workspace.Animals:FindFirstChild(AnimalTable.Name) then
-				AnimalTable.Connections.ESP:Disconnect()
-				AnimalTable.ESP:Remove()
-			end
-		end)
-	end,
-
 	AddESP_Animal = function(Animal)
 		local AnimalTable = {
 			Name = Animal.Name,
@@ -230,7 +169,6 @@ local Visuals = {
 						PlayerTable.ESP.Center = true
 						PlayerTable.ESP.Size = GetEnv().Visuals.ESPSettings.TextSize
 						PlayerTable.ESP.Outline = GetEnv().Visuals.ESPSettings.Outline
-						warn(typeof(GetEnv().Visuals.ESPSettings.OutlineColor), GetEnv().Visuals.ESPSettings.OutlineColor)
 						PlayerTable.ESP.OutlineColor = GetEnv().Visuals.ESPSettings.OutlineColor
 						PlayerTable.ESP.Color = GetEnv().Visuals.ESPSettings.TextColor
 						PlayerTable.ESP.Transparency = GetEnv().Visuals.ESPSettings.TextTransparency
