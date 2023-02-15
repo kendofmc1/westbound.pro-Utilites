@@ -12,7 +12,7 @@ local Vector2new, Vector3new, CFramenew, Drawingnew, Color3fromRGB, WorldToViewp
 
 --// Launching checks
 
-if not getgenv().AirTeam_westboundpro or getgenv().AirTeam_westboundpro.WallHack then return end
+if not getgenv().AirTeam_westboundpro or not getgenv().AirTeam_westboundpro.WallHack then return end
 
 --// Services
 
@@ -28,75 +28,6 @@ local ServiceConnections = {}
 
 --// Environment
 
-getgenv().AirTeam_westboundpro.WallHack = {
-	Settings = {
-		Enabled = false,
-		TeamCheck = false,
-		AliveCheck = true,
-		Animals = false
-	},
-
-	Visuals = {
-		ESPSettings = {
-			Enabled = true,
-			TextColor = Color3fromRGB(255, 255, 255),
-			TextSize = 14,
-			Outline = true,
-			OutlineColor = Color3fromRGB(0, 0, 0),
-			TextTransparency = 0.7,
-			TextFont = Drawing.Fonts.UI, -- UI, System, Plex, Monospace
-			DisplayDistance = true,
-			DisplayHealth = true,
-			DisplayName = true
-		},
-
-		TracersSettings = {
-			Enabled = true,
-			Type = 1, -- 1 - Bottom; 2 - Center; 3 - Mouse
-			Transparency = 0.7,
-			Thickness = 1,
-			Color = Color3fromRGB(255, 255, 255)
-		},
-
-		BoxSettings = {
-			Enabled = true,
-			Type = 1; -- 1 - 3D; 2 - 2D;
-			Color = Color3fromRGB(255, 255, 255),
-			Transparency = 0.7,
-			Thickness = 1,
-			Filled = false, -- For 2D
-			Increase = 1
-		},
-
-		HeadDotSettings = {
-			Enabled = true,
-			Color = Color3fromRGB(255, 255, 255),
-			Transparency = 0.5,
-			Thickness = 1,
-			Filled = true,
-			Sides = 30
-		}
-	},
-
-	Crosshair = {
-		Settings = {
-			Enabled = false,
-			Type = 1, -- 1 - Mouse; 2 - Center
-			Size = 12,
-			Thickness = 1,
-			Color = Color3fromRGB(0, 255, 0),
-			Transparency = 1,
-			GapSize = 5,
-			CenterDot = false,
-			CenterDotColor = Color3fromRGB(0, 255, 0),
-			CenterDotSize = 1,
-			CenterDotTransparency = 1,
-			CenterDotFilled = true,
-			CenterDotThickness = 1
-		},
-	}
-}
-
 local CrosshairParts, WrappedPlayers = {
 	LeftLine = Drawingnew("Line"),
 	RightLine = Drawingnew("Line"),
@@ -104,8 +35,6 @@ local CrosshairParts, WrappedPlayers = {
 	BottomLine = Drawingnew("Line"),
 	CenterDot = Drawingnew("Circle")
 }, {}
-
-local Environment = getgenv().AirTeam_westboundpro.WallHack
 
 --// Core Functions
 
