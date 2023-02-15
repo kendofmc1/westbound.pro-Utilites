@@ -94,18 +94,16 @@ getgenv().AirTeam_westboundpro.WallHack = {
 			CenterDotFilled = true,
 			CenterDotThickness = 1
 		},
-
-		Parts = {
-			LeftLine = Drawingnew("Line"),
-			RightLine = Drawingnew("Line"),
-			TopLine = Drawingnew("Line"),
-			BottomLine = Drawingnew("Line"),
-			CenterDot = Drawingnew("Circle")
-		}
-	},
-
-	WrappedPlayers = {}
+	}
 }
+
+local CrosshairParts, WrappedPlayers = {
+	LeftLine = Drawingnew("Line"),
+	RightLine = Drawingnew("Line"),
+	TopLine = Drawingnew("Line"),
+	BottomLine = Drawingnew("Line"),
+	CenterDot = Drawingnew("Circle")
+}, {}
 
 local Environment = getgenv().AirTeam_westboundpro.WallHack
 
@@ -116,7 +114,7 @@ WorldToViewportPoint = function(...)
 end
 
 local function GetPlayerTable(Player)
-	for _, v in next, Environment.WrappedPlayers do
+	for _, v in next, WrappedPlayers do
 		if v.Name == Player.Name then
 			return v
 		end
@@ -482,60 +480,60 @@ local Visuals = {
 
 				--// Left Line
 
-				Environment.Crosshair.Parts.LeftLine.Visible = Environment.Crosshair.Settings.Enabled and Environment.Settings.Enabled
-				Environment.Crosshair.Parts.LeftLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.LeftLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.LeftLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.LeftLine.Visible = Environment.Crosshair.Settings.Enabled and Environment.Settings.Enabled
+				CrosshairParts.LeftLine.Color = Environment.Crosshair.Settings.Color
+				CrosshairParts.LeftLine.Thickness = Environment.Crosshair.Settings.Thickness
+				CrosshairParts.LeftLine.Transparency = Environment.Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.LeftLine.From = Vector2new(AxisX + Environment.Crosshair.Settings.GapSize, AxisY)
-				Environment.Crosshair.Parts.LeftLine.To = Vector2new(AxisX + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.LeftLine.From = Vector2new(AxisX + Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.LeftLine.To = Vector2new(AxisX + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize, AxisY)
 
 				--// Right Line
 
-				Environment.Crosshair.Parts.RightLine.Visible = Environment.Settings.Enabled
-				Environment.Crosshair.Parts.RightLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.RightLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.RightLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.RightLine.Visible = Environment.Settings.Enabled
+				CrosshairParts.RightLine.Color = Environment.Crosshair.Settings.Color
+				CrosshairParts.RightLine.Thickness = Environment.Crosshair.Settings.Thickness
+				CrosshairParts.RightLine.Transparency = Environment.Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.RightLine.From = Vector2new(AxisX - Environment.Crosshair.Settings.GapSize, AxisY)
-				Environment.Crosshair.Parts.RightLine.To = Vector2new(AxisX - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.RightLine.From = Vector2new(AxisX - Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.RightLine.To = Vector2new(AxisX - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize, AxisY)
 
 				--// Top Line
 
-				Environment.Crosshair.Parts.TopLine.Visible = Environment.Settings.Enabled
-				Environment.Crosshair.Parts.TopLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.TopLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.TopLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.TopLine.Visible = Environment.Settings.Enabled
+				CrosshairParts.TopLine.Color = Environment.Crosshair.Settings.Color
+				CrosshairParts.TopLine.Thickness = Environment.Crosshair.Settings.Thickness
+				CrosshairParts.TopLine.Transparency = Environment.Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.TopLine.From = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.GapSize)
-				Environment.Crosshair.Parts.TopLine.To = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.TopLine.From = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.TopLine.To = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize)
 
 				--// Bottom Line
 
-				Environment.Crosshair.Parts.BottomLine.Visible = Environment.Settings.Enabled
-				Environment.Crosshair.Parts.BottomLine.Color = Environment.Crosshair.Settings.Color
-				Environment.Crosshair.Parts.BottomLine.Thickness = Environment.Crosshair.Settings.Thickness
-				Environment.Crosshair.Parts.BottomLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.BottomLine.Visible = Environment.Settings.Enabled
+				CrosshairParts.BottomLine.Color = Environment.Crosshair.Settings.Color
+				CrosshairParts.BottomLine.Thickness = Environment.Crosshair.Settings.Thickness
+				CrosshairParts.BottomLine.Transparency = Environment.Crosshair.Settings.Transparency
 
-				Environment.Crosshair.Parts.BottomLine.From = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.GapSize)
-				Environment.Crosshair.Parts.BottomLine.To = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.BottomLine.From = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.BottomLine.To = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize)
 
 				--// Center Dot
 
-				Environment.Crosshair.Parts.CenterDot.Visible = Environment.Settings.Enabled and Environment.Crosshair.Settings.CenterDot
-				Environment.Crosshair.Parts.CenterDot.Color = Environment.Crosshair.Settings.CenterDotColor
-				Environment.Crosshair.Parts.CenterDot.Radius = Environment.Crosshair.Settings.CenterDotSize
-				Environment.Crosshair.Parts.CenterDot.Transparency = Environment.Crosshair.Settings.CenterDotTransparency
-				Environment.Crosshair.Parts.CenterDot.Filled = Environment.Crosshair.Settings.CenterDotFilled
-				Environment.Crosshair.Parts.CenterDot.Thickness = Environment.Crosshair.Settings.CenterDotThickness
+				CrosshairParts.CenterDot.Visible = Environment.Settings.Enabled and Environment.Crosshair.Settings.CenterDot
+				CrosshairParts.CenterDot.Color = Environment.Crosshair.Settings.CenterDotColor
+				CrosshairParts.CenterDot.Radius = Environment.Crosshair.Settings.CenterDotSize
+				CrosshairParts.CenterDot.Transparency = Environment.Crosshair.Settings.CenterDotTransparency
+				CrosshairParts.CenterDot.Filled = Environment.Crosshair.Settings.CenterDotFilled
+				CrosshairParts.CenterDot.Thickness = Environment.Crosshair.Settings.CenterDotThickness
 
-				Environment.Crosshair.Parts.CenterDot.Position = Vector2new(AxisX, AxisY)
+				CrosshairParts.CenterDot.Position = Vector2new(AxisX, AxisY)
 			else
-				Environment.Crosshair.Parts.LeftLine.Visible = false
-				Environment.Crosshair.Parts.RightLine.Visible = false
-				Environment.Crosshair.Parts.TopLine.Visible = false
-				Environment.Crosshair.Parts.BottomLine.Visible = false
-				Environment.Crosshair.Parts.CenterDot.Visible = false
+				CrosshairParts.LeftLine.Visible = false
+				CrosshairParts.RightLine.Visible = false
+				CrosshairParts.TopLine.Visible = false
+				CrosshairParts.BottomLine.Visible = false
+				CrosshairParts.CenterDot.Visible = false
 			end
 		end)
 	end
@@ -547,14 +545,14 @@ local function Wrap(Player)
 	if not GetPlayerTable(Player) then
 		local Table, Value = nil, {Name = Player.Name, RigType = nil, Checks = {Alive = true, Team = true}, Connections = {}, ESP = nil, Tracer = nil, HeadDot = nil, Box = {Square = nil, TopLeftLine = nil, TopRightLine = nil, BottomLeftLine = nil, BottomRightLine = nil}, Chams = {}}
 
-		for _, v in next, Environment.WrappedPlayers do
+		for _, v in next, WrappedPlayers do
 			if v[1] == Player.Name then
 				Table = v
 			end
 		end
 
 		if not Table then
-			Environment.WrappedPlayers[#Environment.WrappedPlayers + 1] = Value
+			WrappedPlayers[#WrappedPlayers + 1] = Value
 			AssignRigType(Player)
 			InitChecks(Player)
 
@@ -569,7 +567,7 @@ end
 local function UnWrap(Player)
 	local Table, Index = nil, nil
 
-	for i, v in next, Environment.WrappedPlayers do
+	for i, v in next, WrappedPlayers do
 		if v.Name == Player.Name then
 			Table, Index = v, i
 		end
@@ -600,7 +598,7 @@ local function UnWrap(Player)
 			end
 		end
 
-		Environment.WrappedPlayers[Index] = nil
+		WrappedPlayers[Index] = nil
 	end
 end
 
