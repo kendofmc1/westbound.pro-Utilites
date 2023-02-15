@@ -47,11 +47,10 @@ getgenv().AirTeam_westboundpro.Aimbot = {
 		Sides = 60,
 		Thickness = 1,
 		Filled = false
-	},
-
-	FOVCircle = Drawing.new("Circle")
+	}
 }
 
+local FOVCircle = Drawing.new("Circle")
 local ParentEnvironment, Environment = getgenv().AirTeam_westboundpro.Settings, getgenv().AirTeam_westboundpro.Aimbot
 
 --// Core Functions
@@ -63,7 +62,7 @@ end
 local function CancelLock()
 	Environment.Locked = nil
 	if Animation then Animation:Cancel() end
-	Environment.FOVCircle.Color = Environment.FOVSettings.Color
+	FOVCircle.Color = Environment.FOVSettings.Color
 	UserInputService.MouseDeltaSensitivity = OriginalSensitivity
 end
 
@@ -98,16 +97,16 @@ local function Load()
 
 	ServiceConnections.RenderSteppedConnection = RunService.RenderStepped:Connect(function()
 		if ParentEnvironment.FOV.Enabled then
-			Environment.FOVCircle.Radius = ParentEnvironment.FOV.Amount
-			Environment.FOVCircle.Thickness = Environment.FOVSettings.Thickness
-			Environment.FOVCircle.Filled = Environment.FOVSettings.Filled
-			Environment.FOVCircle.NumSides = Environment.FOVSettings.Sides
-			Environment.FOVCircle.Color = Environment.FOVSettings.Color
-			Environment.FOVCircle.Transparency = Environment.FOVSettings.Transparency
-			Environment.FOVCircle.Visible = ParentEnvironment.FOV.Enabled
-			Environment.FOVCircle.Position = Vector2new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+			FOVCircle.Radius = ParentEnvironment.FOV.Amount
+			FOVCircle.Thickness = Environment.FOVSettings.Thickness
+			FOVCircle.Filled = Environment.FOVSettings.Filled
+			FOVCircle.NumSides = Environment.FOVSettings.Sides
+			FOVCircle.Color = Environment.FOVSettings.Color
+			FOVCircle.Transparency = Environment.FOVSettings.Transparency
+			FOVCircle.Visible = ParentEnvironment.FOV.Enabled
+			FOVCircle.Position = Vector2new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
 		else
-			Environment.FOVCircle.Visible = false
+			FOVCircle.Visible = false
 		end
 
 		if Running and Environment.Settings.Enabled then
@@ -129,7 +128,7 @@ local function Load()
 					UserInputService.MouseDeltaSensitivity = 0
 				end
 
-				Environment.FOVCircle.Color = Environment.FOVSettings.LockedColor
+				FOVCircle.Color = Environment.FOVSettings.LockedColor
 			end
 		end
 	end)
