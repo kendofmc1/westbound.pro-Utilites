@@ -12,7 +12,7 @@ local pcall, getgenv, next, setmetatable, Vector2new, CFramenew, Color3fromRGB, 
 
 --// Launching checks
 
-if not getgenv().AirTeam_westboundpro or getgenv().AirTeam_westboundpro.Aimbot then return end
+if not getgenv().AirTeam_westboundpro or not getgenv().AirTeam_westboundpro.Aimbot then return end
 
 --// Services
 
@@ -29,29 +29,7 @@ local RequiredDistance, Typing, Running, ServiceConnections, Parts, Animation, O
 
 --// Environment
 
-getgenv().AirTeam_westboundpro.Aimbot = {
-	Settings = {
-		Enabled = false,
-		WallCheck = false,
-		Sensitivity = 0, -- Animation length (in seconds) before fully locking onto target
-		ThirdPerson = false, -- Uses mousemoverel instead of CFrame to support locking in third person (could be choppy)
-		ThirdPersonSensitivity = 3,
-		TriggerKey = "MouseButton2",
-		Toggle = false,
-	},
-
-	FOVSettings = {
-		Color = Color3fromRGB(255, 255, 255),
-		LockedColor = Color3fromRGB(255, 70, 70),
-		Transparency = 0.5,
-		Sides = 60,
-		Thickness = 1,
-		Filled = false
-	}
-}
-
 local FOVCircle = Drawing.new("Circle")
-local ParentEnvironment, Environment = getgenv().AirTeam_westboundpro.Settings, getgenv().AirTeam_westboundpro.Aimbot
 
 --// Core Functions
 
@@ -67,13 +45,13 @@ local function CancelLock()
 end
 
 local function GetClosestPlayer()
-	local HitPart = Parentgetgenv().AirTeam_westboundpro.Aimbot.HitPart == "Random" and Parts[math.random(1, #Parts - 1)] or Parentgetgenv().AirTeam_westboundpro.Aimbot.HitPart
+	local HitPart = getgenv().AirTeam_westboundpro.Settings.HitPart == "Random" and Parts[math.random(1, #Parts - 1)] or getgenv().AirTeam_westboundpro.Settings.HitPart
 
 	if not getgenv().AirTeam_westboundpro.Aimbot.Locked then
-		RequiredDistance = (Parentgetgenv().AirTeam_westboundpro.Aimbot.FOV.Enabled and Parentgetgenv().AirTeam_westboundpro.Aimbot.FOV.Amount or 2000)
+		RequiredDistance = (getgenv().AirTeam_westboundpro.Settings.FOV.Enabled and getgenv().AirTeam_westboundpro.Settings.FOV.Amount or 2000)
 
 		for _, v in next, Players:GetPlayers() do
-			if v ~= LocalPlayer and v.Character and v.Character:FindFirstChild(Parentgetgenv().AirTeam_westboundpro.Aimbot.HitPart) and v.Character:FindFirstChildOfClass("Humanoid") then
+			if v ~= LocalPlayer and v.Character and v.Character:FindFirstChild(getgenv().AirTeam_westboundpro.Settings.HitPart) and v.Character:FindFirstChildOfClass("Humanoid") then
 				if LocalPlayer.Team == game.Teams.Cowboys and v.TeamColor == LocalPlayer.TeamColor then continue end
 				if v.Character:FindFirstChildOfClass("Humanoid").Health <= 0 then continue end
 				if getgenv().AirTeam_westboundpro.Aimbot.Settings.WallCheck and #(Camera:GetPartsObscuringTarget({v.Character[HitPart].Position}, v.Character:GetDescendants())) > 0 then continue end
@@ -87,7 +65,7 @@ local function GetClosestPlayer()
 				end
 			end
 		end
-	elseif (UserInputService:GetMouseLocation() - ConvertVector(Camera:WorldToViewportPoint(getgenv().AirTeam_westboundpro.Aimbot.Locked.Character[Parentgetgenv().AirTeam_westboundpro.Aimbot.HitPart].Position))).Magnitude > RequiredDistance then
+	elseif (UserInputService:GetMouseLocation() - ConvertVector(Camera:WorldToViewportPoint(getgenv().AirTeam_westboundpro.Aimbot.Locked.Character[getgenv().AirTeam_westboundpro.Settings.HitPart].Position))).Magnitude > RequiredDistance then
 		CancelLock()
 	end
 end
@@ -96,14 +74,14 @@ local function Load()
 	OriginalSensitivity = UserInputService.MouseDeltaSensitivity
 
 	ServiceConnections.RenderSteppedConnection = RunService.RenderStepped:Connect(function()
-		if Parentgetgenv().AirTeam_westboundpro.Aimbot.FOV.Enabled then
-			FOVCircle.Radius = Parentgetgenv().AirTeam_westboundpro.Aimbot.FOV.Amount
+		if getgenv().AirTeam_westboundpro.Settings.FOV.Enabled then
+			FOVCircle.Radius = getgenv().AirTeam_westboundpro.Settings.FOV.Amount
 			FOVCircle.Thickness = getgenv().AirTeam_westboundpro.Aimbot.FOVSettings.Thickness
 			FOVCircle.Filled = getgenv().AirTeam_westboundpro.Aimbot.FOVSettings.Filled
 			FOVCircle.NumSides = getgenv().AirTeam_westboundpro.Aimbot.FOVSettings.Sides
 			FOVCircle.Color = getgenv().AirTeam_westboundpro.Aimbot.FOVSettings.Color
 			FOVCircle.Transparency = getgenv().AirTeam_westboundpro.Aimbot.FOVSettings.Transparency
-			FOVCircle.Visible = Parentgetgenv().AirTeam_westboundpro.Aimbot.FOV.Enabled
+			FOVCircle.Visible = getgenv().AirTeam_westboundpro.Settings.FOV.Enabled
 			FOVCircle.Position = Vector2new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
 		else
 			FOVCircle.Visible = false
@@ -114,7 +92,7 @@ local function Load()
 
 			if getgenv().AirTeam_westboundpro.Aimbot.Locked then
 				if getgenv().AirTeam_westboundpro.Aimbot.Settings.ThirdPerson then
-					local Vector = Camera:WorldToViewportPoint(getgenv().AirTeam_westboundpro.Aimbot.Locked.Character[Parentgetgenv().AirTeam_westboundpro.Aimbot.HitPart].Position)
+					local Vector = Camera:WorldToViewportPoint(getgenv().AirTeam_westboundpro.Aimbot.Locked.Character[getgenv().AirTeam_westboundpro.Settings.HitPart].Position)
 
 					mousemoverel((Vector.X - UserInputService:GetMouseLocation().X) * getgenv().AirTeam_westboundpro.Aimbot.Settings.ThirdPersonSensitivity, (Vector.Y - UserInputService:GetMouseLocation().Y) * getgenv().AirTeam_westboundpro.Aimbot.Settings.ThirdPersonSensitivity)
 				else
@@ -122,7 +100,7 @@ local function Load()
 						Animation = TweenService:Create(Camera, TweenInfo.new(getgenv().AirTeam_westboundpro.Aimbot.Settings.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFramenew(Camera.CFrame.Position, getgenv().AirTeam_westboundpro.Aimbot.Locked.Character[getgenv().AirTeam_westboundpro.Aimbot.Settings.LockPart].Position)})
 						Animation:Play()
 					else
-						Camera.CFrame = CFramenew(Camera.CFrame.Position, getgenv().AirTeam_westboundpro.Aimbot.Locked.Character[Parentgetgenv().AirTeam_westboundpro.Aimbot.HitPart].Position)
+						Camera.CFrame = CFramenew(Camera.CFrame.Position, getgenv().AirTeam_westboundpro.Aimbot.Locked.Character[getgenv().AirTeam_westboundpro.Settings.HitPart].Position)
 					end
 
 					UserInputService.MouseDeltaSensitivity = 0
