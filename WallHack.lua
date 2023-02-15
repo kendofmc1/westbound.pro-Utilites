@@ -140,13 +140,13 @@ local function InitChecks(Player)
 
 	PlayerTable.Connections.UpdateChecks = RunService.RenderStepped:Connect(function()
 		if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") then
-			if Environment.Settings.AliveCheck then
+			if getgenv().AirTeam_westboundpro.WallHack.Settings.AliveCheck then
 				PlayerTable.Checks.Alive = Player.Character:FindFirstChildOfClass("Humanoid").Health > 0
 			else
 				PlayerTable.Checks.Alive = true
 			end
 
-			if Environment.Settings.TeamCheck then
+			if getgenv().AirTeam_westboundpro.WallHack.Settings.TeamCheck then
 				PlayerTable.Checks.Team = Player.TeamColor ~= LocalPlayer.TeamColor
 			else
 				PlayerTable.Checks.Team = true
@@ -169,20 +169,20 @@ local Visuals = {
 		}
 
 		AnimalTable.Connections.ESP = RunService.RenderStepped:Connect(function()
-			if workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and Environment.Settings.Enabled and Environment.Settings.Animals then
+			if workspace.Animals:FindFirstChild(AnimalTable.Name) and Animal:FindFirstChildOfClass("Humanoid") and Animal:FindFirstChild("HumanoidRootPart") and Animal:FindFirstChild("Head") and getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled and getgenv().AirTeam_westboundpro.WallHack.Settings.Animals then
 				local Vector, OnScreen = WorldToViewportPoint(Animal.Head.Position)
 
 				if OnScreen then
-					AnimalTable.ESP.Visible = Environment.Settings.Animals
+					AnimalTable.ESP.Visible = getgenv().AirTeam_westboundpro.WallHack.Settings.Animals
 
 					if AnimalTable.ESP.Visible then
 						AnimalTable.ESP.Center = true
-						AnimalTable.ESP.Size = Environment.Visuals.ESPSettings.TextSize
-						AnimalTable.ESP.Outline = Environment.Visuals.ESPSettings.Outline
-						AnimalTable.ESP.OutlineColor = Environment.Visuals.ESPSettings.OutlineColor
-						AnimalTable.ESP.Color = Environment.Visuals.ESPSettings.TextColor
-						AnimalTable.ESP.Transparency = Environment.Visuals.ESPSettings.TextTransparency
-						AnimalTable.ESP.Font = Environment.Visuals.ESPSettings.TextFont
+						AnimalTable.ESP.Size = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextSize
+						AnimalTable.ESP.Outline = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.Outline
+						AnimalTable.ESP.OutlineColor = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.OutlineColor
+						AnimalTable.ESP.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextColor
+						AnimalTable.ESP.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextTransparency
+						AnimalTable.ESP.Font = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextFont
 
 						AnimalTable.ESP.Position = Vector2new(Vector.X, Vector.Y - 25)
 
@@ -194,15 +194,15 @@ local Visuals = {
 							end)
 						}, ""
 
-						if Environment.Visuals.ESPSettings.DisplayName then
+						if getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayName then
 							Content = Parts.Name..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayHealth then
-							Content = Parts.Health..(Environment.Visuals.ESPSettings.DisplayName and " " or "")..Content
+						if getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayHealth then
+							Content = Parts.Health..(getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayName and " " or "")..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayDistance then
+						if getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayDistance then
 							Content = Content.." "..Parts.Distance
 						end
 
@@ -228,22 +228,22 @@ local Visuals = {
 		PlayerTable.ESP = Drawingnew("Text")
 
 		PlayerTable.Connections.ESP = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and Environment.Settings.Enabled then
+			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled then
 				local Vector, OnScreen = WorldToViewportPoint(Player.Character.Head.Position)
 
-				PlayerTable.ESP.Visible = Environment.Visuals.ESPSettings.Enabled
+				PlayerTable.ESP.Visible = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.Enabled
 
-				if OnScreen and Environment.Visuals.ESPSettings.Enabled then
+				if OnScreen and getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.Enabled then
 					PlayerTable.ESP.Visible = PlayerTable.Checks.Alive and PlayerTable.Checks.Team and true or false
 
 					if PlayerTable.ESP.Visible then
 						PlayerTable.ESP.Center = true
-						PlayerTable.ESP.Size = Environment.Visuals.ESPSettings.TextSize
-						PlayerTable.ESP.Outline = Environment.Visuals.ESPSettings.Outline
-						PlayerTable.ESP.OutlineColor = Environment.Visuals.ESPSettings.OutlineColor
-						PlayerTable.ESP.Color = Environment.Visuals.ESPSettings.TextColor
-						PlayerTable.ESP.Transparency = Environment.Visuals.ESPSettings.TextTransparency
-						PlayerTable.ESP.Font = Environment.Visuals.ESPSettings.TextFont
+						PlayerTable.ESP.Size = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextSize
+						PlayerTable.ESP.Outline = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.Outline
+						PlayerTable.ESP.OutlineColor = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.OutlineColor
+						PlayerTable.ESP.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextColor
+						PlayerTable.ESP.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextTransparency
+						PlayerTable.ESP.Font = getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.TextFont
 
 						PlayerTable.ESP.Position = Vector2new(Vector.X, Vector.Y - 25)
 
@@ -253,15 +253,15 @@ local Visuals = {
 							Name = Player.DisplayName == Player.Name and Player.Name or Player.DisplayName.." {"..Player.Name.."}"
 						}, ""
 
-						if Environment.Visuals.ESPSettings.DisplayName then
+						if getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayName then
 							Content = Parts.Name..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayHealth then
-							Content = Parts.Health..(Environment.Visuals.ESPSettings.DisplayName and " " or "")..Content
+						if getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayHealth then
+							Content = Parts.Health..(getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayName and " " or "")..Content
 						end
 
-						if Environment.Visuals.ESPSettings.DisplayDistance then
+						if getgenv().AirTeam_westboundpro.WallHack.Visuals.ESPSettings.DisplayDistance then
 							Content = Content.." "..Parts.Distance
 						end
 
@@ -282,26 +282,26 @@ local Visuals = {
 		PlayerTable.Tracer = Drawingnew("Line")
 
 		PlayerTable.Connections.Tracer = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Environment.Settings.Enabled then
+			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled then
 				local HRPCFrame, HRPSize = Player.Character.HumanoidRootPart.CFrame, Player.Character.HumanoidRootPart.Size
 				local Vector, OnScreen = WorldToViewportPoint(HRPCFrame * CFramenew(0, -HRPSize.Y, 0).Position)
 
-				if OnScreen and Environment.Visuals.TracersSettings.Enabled then
-					if Environment.Visuals.TracersSettings.Enabled then
+				if OnScreen and getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Enabled then
+					if getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Enabled then
 						PlayerTable.Tracer.Visible = PlayerTable.Checks.Alive and PlayerTable.Checks.Team and true or false
 
 						if PlayerTable.Tracer.Visible then
-							PlayerTable.Tracer.Thickness = Environment.Visuals.TracersSettings.Thickness
-							PlayerTable.Tracer.Color = Environment.Visuals.TracersSettings.Color
-							PlayerTable.Tracer.Transparency = Environment.Visuals.TracersSettings.Transparency
+							PlayerTable.Tracer.Thickness = getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Thickness
+							PlayerTable.Tracer.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Color
+							PlayerTable.Tracer.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Transparency
 
 							PlayerTable.Tracer.To = Vector2new(Vector.X, Vector.Y)
 
-							if Environment.Visuals.TracersSettings.Type == 1 then
+							if getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Type == 1 then
 								PlayerTable.Tracer.From = Vector2new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-							elseif Environment.Visuals.TracersSettings.Type == 2 then
+							elseif getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Type == 2 then
 								PlayerTable.Tracer.From = Vector2new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-							elseif Environment.Visuals.TracersSettings.Type == 3 then
+							elseif getgenv().AirTeam_westboundpro.WallHack.Visuals.TracersSettings.Type == 3 then
 								PlayerTable.Tracer.From = Vector2new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
 							else
 								PlayerTable.Tracer.From = Vector2new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
@@ -329,14 +329,14 @@ local Visuals = {
 		PlayerTable.Box.BottomRightLine = Drawingnew("Line")
 
 		local function Visibility(Bool)
-			if Environment.Visuals.BoxSettings.Type == 1 then
+			if getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Type == 1 then
 				PlayerTable.Box.Square.Visible = not Bool
 
 				PlayerTable.Box.TopLeftLine.Visible = Bool
 				PlayerTable.Box.TopRightLine.Visible = Bool
 				PlayerTable.Box.BottomLeftLine.Visible = Bool
 				PlayerTable.Box.BottomRightLine.Visible = Bool
-			elseif Environment.Visuals.BoxSettings.Type == 2 then
+			elseif getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Type == 2 then
 				PlayerTable.Box.Square.Visible = Bool
 
 				PlayerTable.Box.TopLeftLine.Visible = not Bool
@@ -356,10 +356,10 @@ local Visuals = {
 		end
 
 		PlayerTable.Connections.Box = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and Environment.Settings.Enabled then
+			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("HumanoidRootPart") and Player.Character:FindFirstChild("Head") and getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled then
 				local Vector, OnScreen = WorldToViewportPoint(Player.Character.HumanoidRootPart.Position)
 
-				local HRPCFrame, HRPSize = Player.Character.HumanoidRootPart.CFrame, Player.Character.HumanoidRootPart.Size * Environment.Visuals.BoxSettings.Increase
+				local HRPCFrame, HRPSize = Player.Character.HumanoidRootPart.CFrame, Player.Character.HumanoidRootPart.Size * getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Increase
 
 				local TopLeftPosition = WorldToViewportPoint(HRPCFrame * CFramenew(HRPSize.X,  HRPSize.Y, 0).Position)
 				local TopRightPosition = WorldToViewportPoint(HRPCFrame * CFramenew(-HRPSize.X,  HRPSize.Y, 0).Position)
@@ -369,9 +369,9 @@ local Visuals = {
 				local HeadOffset = WorldToViewportPoint(Player.Character.Head.Position + Vector3new(0, 0.5, 0))
 				local LegsOffset = WorldToViewportPoint(Player.Character.HumanoidRootPart.Position - Vector3new(0, 3, 0))
 
-				Visibility(Environment.Visuals.BoxSettings.Enabled)
+				Visibility(getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Enabled)
 
-				if OnScreen and Environment.Visuals.BoxSettings.Enabled then
+				if OnScreen and getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Enabled then
 					if PlayerTable.Checks.Alive and PlayerTable.Checks.Team then
 						Visibility(true)
 					else
@@ -379,29 +379,29 @@ local Visuals = {
 					end
 
 					if PlayerTable.Box.Square.Visible and not PlayerTable.Box.TopLeftLine.Visible and not PlayerTable.Box.TopRightLine.Visible and not PlayerTable.Box.BottomLeftLine.Visible and not PlayerTable.Box.BottomRightLine.Visible then
-						PlayerTable.Box.Square.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.Square.Color = Environment.Visuals.BoxSettings.Color
-						PlayerTable.Box.Square.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.Square.Filled = Environment.Visuals.BoxSettings.Filled
+						PlayerTable.Box.Square.Thickness = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Thickness
+						PlayerTable.Box.Square.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Color
+						PlayerTable.Box.Square.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Transparency
+						PlayerTable.Box.Square.Filled = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Filled
 
 						PlayerTable.Box.Square.Size = Vector2new(2000 / Vector.Z, HeadOffset.Y - LegsOffset.Y)
 						PlayerTable.Box.Square.Position = Vector2new(Vector.X - PlayerTable.Box.Square.Size.X / 2, Vector.Y - PlayerTable.Box.Square.Size.Y / 2)
 					elseif not PlayerTable.Box.Square.Visible and PlayerTable.Box.TopLeftLine.Visible and PlayerTable.Box.TopRightLine.Visible and PlayerTable.Box.BottomLeftLine.Visible and PlayerTable.Box.BottomRightLine.Visible then
-						PlayerTable.Box.TopLeftLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.TopLeftLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.TopLeftLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.TopLeftLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Thickness
+						PlayerTable.Box.TopLeftLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Transparency
+						PlayerTable.Box.TopLeftLine.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Color
 
-						PlayerTable.Box.TopRightLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.TopRightLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.TopRightLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.TopRightLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Thickness
+						PlayerTable.Box.TopRightLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Transparency
+						PlayerTable.Box.TopRightLine.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Color
 
-						PlayerTable.Box.BottomLeftLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.BottomLeftLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.BottomLeftLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.BottomLeftLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Thickness
+						PlayerTable.Box.BottomLeftLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Transparency
+						PlayerTable.Box.BottomLeftLine.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Color
 
-						PlayerTable.Box.BottomRightLine.Thickness = Environment.Visuals.BoxSettings.Thickness
-						PlayerTable.Box.BottomRightLine.Transparency = Environment.Visuals.BoxSettings.Transparency
-						PlayerTable.Box.BottomRightLine.Color = Environment.Visuals.BoxSettings.Color
+						PlayerTable.Box.BottomRightLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Thickness
+						PlayerTable.Box.BottomRightLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Transparency
+						PlayerTable.Box.BottomRightLine.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.BoxSettings.Color
 
 						PlayerTable.Box.TopLeftLine.From = Vector2new(TopLeftPosition.X, TopLeftPosition.Y)
 						PlayerTable.Box.TopLeftLine.To = Vector2new(TopRightPosition.X, TopRightPosition.Y)
@@ -430,21 +430,21 @@ local Visuals = {
 		PlayerTable.HeadDot = Drawingnew("Circle")
 
 		PlayerTable.Connections.HeadDot = RunService.RenderStepped:Connect(function()
-			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("Head") and Environment.Settings.Enabled then
+			if Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") and Player.Character:FindFirstChild("Head") and getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled then
 				local Vector, OnScreen = WorldToViewportPoint(Player.Character.Head.Position)
 
-				PlayerTable.HeadDot.Visible = Environment.Visuals.HeadDotSettings.Enabled
+				PlayerTable.HeadDot.Visible = getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Enabled
 
-				if OnScreen and Environment.Visuals.HeadDotSettings.Enabled then
-					if Environment.Visuals.HeadDotSettings.Enabled then
+				if OnScreen and getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Enabled then
+					if getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Enabled then
 						PlayerTable.HeadDot.Visible = PlayerTable.Checks.Alive and PlayerTable.Checks.Team and true or false
 
 						if PlayerTable.HeadDot.Visible then
-							PlayerTable.HeadDot.Thickness = Environment.Visuals.HeadDotSettings.Thickness
-							PlayerTable.HeadDot.Color = Environment.Visuals.HeadDotSettings.Color
-							PlayerTable.HeadDot.Transparency = Environment.Visuals.HeadDotSettings.Transparency
-							PlayerTable.HeadDot.NumSides = Environment.Visuals.HeadDotSettings.Sides
-							PlayerTable.HeadDot.Filled = Environment.Visuals.HeadDotSettings.Filled
+							PlayerTable.HeadDot.Thickness = getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Thickness
+							PlayerTable.HeadDot.Color = getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Color
+							PlayerTable.HeadDot.Transparency = getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Transparency
+							PlayerTable.HeadDot.NumSides = getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Sides
+							PlayerTable.HeadDot.Filled = getgenv().AirTeam_westboundpro.WallHack.Visuals.HeadDotSettings.Filled
 							PlayerTable.HeadDot.Position = Vector2new(Vector.X, Vector.Y)
 
 							local Top, Bottom = WorldToViewportPoint((Player.Character.Head.CFrame * CFramenew(0, Player.Character.Head.Size.Y / 2, 0)).Position), WorldToViewportPoint((Player.Character.Head.CFrame * CFramenew(0, -Player.Character.Head.Size.Y / 2, 0)).Position)
@@ -464,68 +464,68 @@ local Visuals = {
 		local AxisX, AxisY = Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2
 
 		ServiceConnections.AxisConnection = RunService.RenderStepped:Connect(function()
-			if Environment.Crosshair.Settings.Enabled then
-				if Environment.Crosshair.Settings.Type == 1 then
+			if getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Enabled then
+				if getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Type == 1 then
 					AxisX, AxisY = UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y
-				elseif Environment.Crosshair.Settings.Type == 2 then
+				elseif getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Type == 2 then
 					AxisX, AxisY = Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2
 				else
-					Environment.Crosshair.Settings.Type = 1
+					getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Type = 1
 				end
 			end
 		end)
 
 		ServiceConnections.CrosshairConnection = RunService.RenderStepped:Connect(function()
-			if Environment.Crosshair.Settings.Enabled then
+			if getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Enabled then
 
 				--// Left Line
 
-				CrosshairParts.LeftLine.Visible = Environment.Crosshair.Settings.Enabled and Environment.Settings.Enabled
-				CrosshairParts.LeftLine.Color = Environment.Crosshair.Settings.Color
-				CrosshairParts.LeftLine.Thickness = Environment.Crosshair.Settings.Thickness
-				CrosshairParts.LeftLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.LeftLine.Visible = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Enabled and getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled
+				CrosshairParts.LeftLine.Color = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Color
+				CrosshairParts.LeftLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Thickness
+				CrosshairParts.LeftLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Transparency
 
-				CrosshairParts.LeftLine.From = Vector2new(AxisX + Environment.Crosshair.Settings.GapSize, AxisY)
-				CrosshairParts.LeftLine.To = Vector2new(AxisX + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.LeftLine.From = Vector2new(AxisX + getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.LeftLine.To = Vector2new(AxisX + getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Size + getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize, AxisY)
 
 				--// Right Line
 
-				CrosshairParts.RightLine.Visible = Environment.Settings.Enabled
-				CrosshairParts.RightLine.Color = Environment.Crosshair.Settings.Color
-				CrosshairParts.RightLine.Thickness = Environment.Crosshair.Settings.Thickness
-				CrosshairParts.RightLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.RightLine.Visible = getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled
+				CrosshairParts.RightLine.Color = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Color
+				CrosshairParts.RightLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Thickness
+				CrosshairParts.RightLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Transparency
 
-				CrosshairParts.RightLine.From = Vector2new(AxisX - Environment.Crosshair.Settings.GapSize, AxisY)
-				CrosshairParts.RightLine.To = Vector2new(AxisX - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.RightLine.From = Vector2new(AxisX - getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize, AxisY)
+				CrosshairParts.RightLine.To = Vector2new(AxisX - getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Size - getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize, AxisY)
 
 				--// Top Line
 
-				CrosshairParts.TopLine.Visible = Environment.Settings.Enabled
-				CrosshairParts.TopLine.Color = Environment.Crosshair.Settings.Color
-				CrosshairParts.TopLine.Thickness = Environment.Crosshair.Settings.Thickness
-				CrosshairParts.TopLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.TopLine.Visible = getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled
+				CrosshairParts.TopLine.Color = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Color
+				CrosshairParts.TopLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Thickness
+				CrosshairParts.TopLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Transparency
 
-				CrosshairParts.TopLine.From = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.GapSize)
-				CrosshairParts.TopLine.To = Vector2new(AxisX, AxisY + Environment.Crosshair.Settings.Size + Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.TopLine.From = Vector2new(AxisX, AxisY + getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize)
+				CrosshairParts.TopLine.To = Vector2new(AxisX, AxisY + getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Size + getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize)
 
 				--// Bottom Line
 
-				CrosshairParts.BottomLine.Visible = Environment.Settings.Enabled
-				CrosshairParts.BottomLine.Color = Environment.Crosshair.Settings.Color
-				CrosshairParts.BottomLine.Thickness = Environment.Crosshair.Settings.Thickness
-				CrosshairParts.BottomLine.Transparency = Environment.Crosshair.Settings.Transparency
+				CrosshairParts.BottomLine.Visible = getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled
+				CrosshairParts.BottomLine.Color = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Color
+				CrosshairParts.BottomLine.Thickness = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Thickness
+				CrosshairParts.BottomLine.Transparency = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Transparency
 
-				CrosshairParts.BottomLine.From = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.GapSize)
-				CrosshairParts.BottomLine.To = Vector2new(AxisX, AxisY - Environment.Crosshair.Settings.Size - Environment.Crosshair.Settings.GapSize)
+				CrosshairParts.BottomLine.From = Vector2new(AxisX, AxisY - getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize)
+				CrosshairParts.BottomLine.To = Vector2new(AxisX, AxisY - getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.Size - getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.GapSize)
 
 				--// Center Dot
 
-				CrosshairParts.CenterDot.Visible = Environment.Settings.Enabled and Environment.Crosshair.Settings.CenterDot
-				CrosshairParts.CenterDot.Color = Environment.Crosshair.Settings.CenterDotColor
-				CrosshairParts.CenterDot.Radius = Environment.Crosshair.Settings.CenterDotSize
-				CrosshairParts.CenterDot.Transparency = Environment.Crosshair.Settings.CenterDotTransparency
-				CrosshairParts.CenterDot.Filled = Environment.Crosshair.Settings.CenterDotFilled
-				CrosshairParts.CenterDot.Thickness = Environment.Crosshair.Settings.CenterDotThickness
+				CrosshairParts.CenterDot.Visible = getgenv().AirTeam_westboundpro.WallHack.Settings.Enabled and getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.CenterDot
+				CrosshairParts.CenterDot.Color = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.CenterDotColor
+				CrosshairParts.CenterDot.Radius = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.CenterDotSize
+				CrosshairParts.CenterDot.Transparency = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.CenterDotTransparency
+				CrosshairParts.CenterDot.Filled = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.CenterDotFilled
+				CrosshairParts.CenterDot.Thickness = getgenv().AirTeam_westboundpro.WallHack.Crosshair.Settings.CenterDotThickness
 
 				CrosshairParts.CenterDot.Position = Vector2new(AxisX, AxisY)
 			else
