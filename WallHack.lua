@@ -33,7 +33,7 @@ getgenv().AirTeam_westboundpro.WallHack = {
 		Enabled = false,
 		TeamCheck = false,
 		AliveCheck = true,
-        Animals = false
+		Animals = false
 	},
 
 	Visuals = {
