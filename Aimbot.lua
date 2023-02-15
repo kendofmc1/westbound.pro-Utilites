@@ -11,7 +11,7 @@ local pcall, getgenv, next, Vector2new, CFramenew, mousemoverel = pcall, getgenv
 
 --// Launching checks
 
-if not getgenv().AirTeam_westboundpro or not GetEnv() then return end
+if not getgenv().AirTeam_westboundpro or not getgenv().AirTeam_westboundpro.Aimbot then return end
 
 --// Services
 
